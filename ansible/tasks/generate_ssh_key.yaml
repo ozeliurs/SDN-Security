@@ -1,0 +1,13 @@
+---
+- name: Check if SSH Key Exists
+  stat:
+    path: ~/.ssh/id_{{ type | default('ed25519') }}
+  register: ssh_key
+
+- name: Generate SSH Key
+  when: not ssh_key.stat.exists
+  shell: ssh-keygen -t {{ type | default('ed25519') }} -f ~/.ssh/id_{{ type | default('ed25519') }} -N ""
+
+- name: Get the SSH Public Key
+  shell: cat ~/.ssh/id_{{ type | default('ed25519') }}.pub
+  register: ssh_public_key

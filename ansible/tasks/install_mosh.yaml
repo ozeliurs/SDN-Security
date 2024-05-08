@@ -1,0 +1,6 @@
+---
+- name: Install Mosh
+  become: true
+  apt:
+    name: mosh
+    state: present
