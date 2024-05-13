@@ -4,6 +4,15 @@
     - name: Include Secrets
       include_vars: vars/tailscale.yaml
 
+    - name: Install Requirements
+      become: true
+      apt:
+        update_cache: yes
+        name:
+          - curl
+          - jq
+        state: present
+
     - name: Check if Tailscale is installed
       become: true
       shell: "tailscale status"
