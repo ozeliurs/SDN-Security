@@ -1,9 +1,9 @@
-- hosts: all
+- hosts: no-tailscale
   name: Install and Configure Tailscale
 
   tasks:
     - name: Include Secrets
-      ansible.builtin.include_vars: vars/tailscale.yaml
+      ansible.builtin.include_vars: ../vars/tailscale.yaml
 
     - name: Install Requirements
       become: true
@@ -19,6 +19,7 @@
       ansible.builtin.command: "tailscale status"
       register: tailscale
       ignore_errors: true
+      changed_when: false
 
     - name: Install Tailscale
       become: true
@@ -35,6 +36,7 @@
       become: true
       ansible.builtin.shell: "tailscale status --json | jq -r .Self.DNSName"
       register: tailscale_hostname
+      changed_when: false
 
     - name: Debug Tailscale Hostname
       ansible.builtin.debug:

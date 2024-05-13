@@ -1,6 +1,6 @@
 ---
 - name: Update Time
-  include_tasks: tasks/update_time.yaml
+  include_tasks: ../tasks/update_time.yaml
 
 - name: Check is Mininet is already installed
   become: true
@@ -17,7 +17,7 @@
     state: present
 
 - name: Remove EXTERNALLY-MANAGED
-  include_tasks: tasks/remove-externally-managed.yaml
+  include_tasks: ../tasks/remove-externally-managed.yaml
 
 - name: Clone Mininet
   when: not mininet.stat.exists

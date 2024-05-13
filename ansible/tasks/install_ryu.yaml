@@ -1,6 +1,6 @@
 ---
 - name: Remove EXTERNALLY-MANAGED
-  include_tasks: tasks/remove-externally-managed.yaml
+  include_tasks: ../tasks/remove-externally-managed.yaml
 
 - name: Install Ryu
   become: true
