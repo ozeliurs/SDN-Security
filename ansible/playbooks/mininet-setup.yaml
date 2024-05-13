@@ -1,0 +1,9 @@
+---
+- name: Install Mininet and Deps
+  hosts: mininet
+  tasks:
+    - name: Install Mininet
+      include_tasks: tasks/install-mininet.yaml
+
+    - name: Install Ryu
+      include_tasks: tasks/install_ryu.yaml

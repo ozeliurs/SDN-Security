@@ -31,11 +31,15 @@
   when: not mininet.stat.exists
   become: true
   shell: /opt/mininet/util/install.sh -a
+  ignore_errors: true
+  register: mininet_install
+  changed_when: mininet_install.rc == 0
 
 - name: Run Mininet + OVS test
   become: true
   shell: sudo mn --switch ovsbr --test pingall
   register: mininet_test
+  changed_when: false
 
 - name: Show Mininet test output
   debug:
