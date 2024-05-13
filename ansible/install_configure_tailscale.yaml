@@ -28,6 +28,8 @@
     - name: Login Tailscale
       become: true
       ansible.builtin.command: "tailscale login --login-server https://headscale.ozeliurs.com --auth-key {{ tailscale_auth_key }}"
+      register: tailscale_login
+      changed_when: "tailscale_login.stdout.find('Logged in') != -1"
 
     - name: Get Tailscale Hostname
       become: true

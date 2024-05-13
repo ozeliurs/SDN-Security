@@ -1,0 +1,42 @@
+---
+- name: Update Time
+  include_tasks: tasks/update_time.yaml
+
+- name: Check is Mininet is already installed
+  become: true
+  stat:
+    path: /opt/stacks/mininet
+  register: mininet
+  changed_when: false
+
+- name: Install git
+  when: not mininet.stat.exists
+  become: true
+  apt:
+    name: git
+    state: present
+
+- name: Remove EXTERNALLY-MANAGED
+  include_tasks: tasks/remove-externally-managed.yaml
+
+- name: Clone Mininet
+  when: not mininet.stat.exists
+  become: true
+  git:
+    repo: https://github.com/mininet/mininet
+    dest: /opt/mininet
+    version: 2.3.1b4
+
+- name: Install Mininet
+  when: not mininet.stat.exists
+  become: true
+  shell: /opt/mininet/util/install.sh -a
+
+- name: Run Mininet + OVS test
+  become: true
+  shell: sudo mn --switch ovsbr --test pingall
+  register: mininet_test
+
+- name: Show Mininet test output
+  debug:
+    var: mininet_test.stderr_lines
