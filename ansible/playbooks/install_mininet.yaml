@@ -1,0 +1,15 @@
+---
+- name: Install Mininet and Deps
+  hosts: mininet
+
+  vars:
+    install_ryu: true
+    install_ivs: true
+
+  tasks:
+    - name: Install Mininet
+      include_tasks: ../tasks/install-mininet.yaml
+
+    - name: Install Ryu
+      when: install_ryu
+      include_tasks: ../tasks/install_ryu.yaml

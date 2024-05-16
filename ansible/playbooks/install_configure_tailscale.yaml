@@ -1,0 +1,43 @@
+- hosts: no-tailscale
+  name: Install and Configure Tailscale
+
+  tasks:
+    - name: Include Secrets
+      ansible.builtin.include_vars: ../vars/tailscale.yaml
+
+    - name: Install Requirements
+      become: true
+      ansible.builtin.apt:
+        update_cache: true
+        name:
+          - curl
+          - jq
+        state: present
+
+    - name: Check if Tailscale is installed
+      become: true
+      ansible.builtin.command: "tailscale status"
+      register: tailscale
+      ignore_errors: true
+      changed_when: false
+
+    - name: Install Tailscale
+      become: true
+      when: tailscale is failed
+      ansible.builtin.shell: curl -fsSL https://tailscale.com/install.sh | sh
+
+    - name: Login Tailscale
+      become: true
+      ansible.builtin.command: "tailscale login --login-server https://headscale.ozeliurs.com --auth-key {{ tailscale_auth_key }}"
+      register: tailscale_login
+      changed_when: "tailscale_login.stdout.find('Logged in') != -1"
+
+    - name: Get Tailscale Hostname
+      become: true
+      ansible.builtin.shell: "tailscale status --json | jq -r .Self.DNSName"
+      register: tailscale_hostname
+      changed_when: false
+
+    - name: Debug Tailscale Hostname
+      ansible.builtin.debug:
+        var: tailscale_hostname.stdout
