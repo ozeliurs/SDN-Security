@@ -4,13 +4,13 @@
 
 - name: Check is Mininet is already installed
   become: true
-  stat:
-    path: /opt/stacks/mininet
+  shell: command mn
   register: mininet
   changed_when: false
+  ignore_errors: true
 
 - name: Install git
-  when: not mininet.stat.exists
+  when: mininet is failed
   become: true
   apt:
     name: git
@@ -20,7 +20,7 @@
   include_tasks: ../tasks/remove-externally-managed.yaml
 
 - name: Clone Mininet
-  when: not mininet.stat.exists
+  when: mininet is failed
   become: true
   git:
     repo: https://github.com/mininet/mininet
@@ -28,7 +28,7 @@
     version: 2.3.1b4
 
 - name: Install Mininet
-  when: not mininet.stat.exists
+  when: mininet is failed
   become: true
   shell: /opt/mininet/util/install.sh -a
   ignore_errors: true
