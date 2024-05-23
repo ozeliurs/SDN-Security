@@ -3,8 +3,7 @@
   hosts: mininet
 
   vars:
-    install_ryu: true
-    install_ivs: true
+    install_ryu: false
 
   tasks:
     - name: Install Mininet
