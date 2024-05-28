@@ -1,0 +1,7 @@
+- name: Install XFCE4
+  become: true
+  apt:
+    name:
+      - xfce4
+      - xfce4-goodies
+    state: present

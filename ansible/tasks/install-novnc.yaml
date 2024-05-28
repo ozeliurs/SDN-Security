@@ -1,0 +1,7 @@
+- name: Install NoVNC
+  become: true
+  apt:
+    name:
+      - novnc
+      - websockify
+    state: present

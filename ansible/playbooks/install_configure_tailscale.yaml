@@ -1,4 +1,4 @@
-- hosts: no-tailscale
+- hosts: no_tailscale
   name: Install and Configure Tailscale
 
   tasks:
