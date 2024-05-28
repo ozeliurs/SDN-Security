@@ -4,12 +4,14 @@
 
   tasks:
     - name: Install Requirements
+      become: true
       ansible.builtin.apt:
         name:
           - python3
           - python3-pip
           - git
           - bwm-ng
+          - hping3
         state: present
 
     - name: Install Miniattack
@@ -17,3 +19,8 @@
       ansible.builtin.git:
         repo: https://github.com/geraked/miniattack.git
         dest: /opt/miniattack
+
+    - name: Install Python Requirements
+      become: true
+      ansible.builtin.pip:
+          requirements: /opt/miniattack/requirements.txt
