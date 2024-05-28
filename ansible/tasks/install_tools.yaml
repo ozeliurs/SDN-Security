@@ -1,0 +1,6 @@
+- name: Install Tools
+  apt:
+    name:
+      - htop
+      - rsync
+    state: present

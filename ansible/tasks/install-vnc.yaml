@@ -1,0 +1,81 @@
+- name: Install tigerVNC
+  become: true
+  ansible.builtin.apt:
+    name:
+      - tigervnc-standalone-server
+      - dbus-x11
+    state: present
+
+- name: Create xstartup
+  become: true
+  ansible.builtin.blockinfile:
+    path: ~/.vnc/xstartup
+    block: |
+      #!/bin/sh
+      unset SESSION_MANAGER
+      unset DBUS_SESSION_BUS_ADDRESS
+      exec startxfce4
+    create: yes
+    mode: 0755
+
+- name: Create config
+  become: true
+  ansible.builtin.blockinfile:
+    path: ~/.vnc/config
+    block: |
+      geometry=1280x720
+      dpi=96
+      depth=24
+      alwaysshared
+      localhost=no
+      securitytypes=None
+    create: yes
+    mode: 0755
+
+- name: Enable VNC Server at startup
+  become: true
+  ansible.builtin.blockinfile:
+    path: /etc/systemd/system/vncserver@.service
+    block: |
+      [Unit]
+      Description=Start TigerVNC server at startup
+      After=syslog.target network.target
+
+      [Service]
+      Type=forking
+      User=root
+      Group=root
+      WorkingDirectory=/root
+      
+      PIDFile=/root/.vnc/%H:%i.pid
+      ExecStartPre=-/usr/bin/vncserver -kill :%i > /dev/null 2>&1
+      ExecStart=/usr/bin/vncserver :%i --I-KNOW-THIS-IS-INSECURE
+      ExecStop=/usr/bin/vncserver -kill :%i
+      
+      [Install]
+      WantedBy=multi-user.target
+    create: yes
+    mode: 0755
+
+- name: Reload Systemd
+  become: true
+  ansible.builtin.systemd:
+    daemon_reload: yes
+
+- name: Enable VNC Server
+  become: true
+  ansible.builtin.systemd:
+    name: vncserver@1
+    enabled: yes
+    state: started
+
+- name: List VNC Server
+  become: true
+  ansible.builtin.shell: vncserver -list
+  register: vncserver_list
+  changed_when: false
+
+- name: Show VNC Server List
+  debug:
+    var: vncserver_list.stdout_lines
+

@@ -1,0 +1,19 @@
+---
+- name: Install MiniAttack
+  hosts: miniattack
+
+  tasks:
+    - name: Install Requirements
+      ansible.builtin.apt:
+        name:
+          - python3
+          - python3-pip
+          - git
+          - bwm-ng
+        state: present
+
+    - name: Install Miniattack
+      become: true
+      ansible.builtin.git:
+        repo: https://github.com/geraked/miniattack.git
+        dest: /opt/miniattack

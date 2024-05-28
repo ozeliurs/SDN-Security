@@ -1,0 +1,13 @@
+---
+- name: Install Display (XFCE4 & VNC)
+  hosts: screen
+
+  tasks:
+    - name: Install XFCE4
+      include_tasks: ../tasks/install-xfce4.yaml
+
+    - name: Install VNC
+      include_tasks: ../tasks/install-vnc.yaml
+
+    # - name: Install NoVNC
+    #   include_tasks: ../tasks/install-novnc.yaml
