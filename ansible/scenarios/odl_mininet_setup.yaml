@@ -1,0 +1,14 @@
+---
+- import_playbook: ../playbooks/install_opendaylight.yaml
+- import_playbook: ../playbooks/install_mininet.yaml
+
+- hosts: all
+  tasks:
+    - name: Run Mininet ODL Integration Test
+      become: true
+      command: mn --controller=remote,ip=localhost,port=6633 --topo=single,3 --test pingall
+      register: mininet_odl_test
+
+    - name: Show Mininet ODL Integration Test output
+      debug:
+        var: mininet_odl_test.stderr_lines

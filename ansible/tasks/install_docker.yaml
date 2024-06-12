@@ -1,0 +1,21 @@
+- name: Install Docker
+  become: true
+  shell: curl -fsSL https://get.docker.com | sh
+  args:
+    executable: /bin/bash
+
+- name: Add user to docker group
+  become: true
+  user:
+    name: "{{ ansible_user }}"
+    groups: docker
+    append: yes
+
+- name: Make /opt/stacks
+  become: true
+  file:
+    path: /opt/stacks
+    state: directory
+    mode: 0774
+    owner: nobody
+    group: sudo

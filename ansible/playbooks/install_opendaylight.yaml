@@ -1,0 +1,39 @@
+---
+- name: Install OpenDaylight
+  hosts: opendaylight
+
+  tasks:
+    - name: Install Docker
+      include_tasks: ../tasks/install_docker.yaml
+
+    - name: Create ODL Folder
+      become: true
+      command: mkdir -p /opt/stacks/opendaylight
+
+    - name: Write Docker Compose File
+      become: true
+      ansible.builtin.template:
+        src: ../templates/docker-compose-opendaylight.yaml.j2
+        dest: /opt/stacks/opendaylight/docker-compose.yaml
+
+    - name: Start OpenDaylight
+      become: true
+      command: docker compose -f /opt/stacks/opendaylight/docker-compose.yaml up -d
+
+    - name: Wait for OpenDaylight to start
+      become: true
+      wait_for:
+          host: localhost
+          port: 8181
+          delay: 5
+          timeout: 300
+          state: started
+
+    - name: Show OpenDaylight logs
+      become: true
+      command: docker logs opendaylight --tail 20
+      register: odl_logs
+
+    - name: Show OpenDaylight logs
+      debug:
+          var: odl_logs.stdout_lines
