@@ -1,6 +1,8 @@
 ---
 title: "Anatomy of a DDoS Attack: From Host Infection to Service Denial"
-authors: [STANISLAS Mélanie]() and [BILLY Maxime]()
+authors:
+  - STANISLAS Mélanie
+  - BILLY Maxime
 ---
 
 # Introduction

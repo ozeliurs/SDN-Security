@@ -25,7 +25,7 @@ jobs:
           if compgen -G "papers/*.md" > /dev/null; then
             for mdfile in papers/*.md; do
               pdffile="papers/pdfs/$(basename "${mdfile%.md}.pdf")"
-              pandoc "$mdfile" --pdf-engine=pdflatex -o "$pdffile"
+              pandoc "$mdfile" --pdf-engine=pdflatex -s -o "$pdffile"
             done
           else
             echo "No Markdown files found in the papers directory."
