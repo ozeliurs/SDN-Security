@@ -57,5 +57,3 @@ jobs:
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: papers/pdfs/
-        asset_name: pdfs
-        asset_content_type: application/pdf
