@@ -17,15 +17,19 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Install Dependencies
-      run: sudo apt-get update && sudo apt-get install -y pandoc texlive texlive-latex-extra
+      run: sudo apt-get update && sudo apt-get install -y texlive texlive-latex-extra pandoc
 
     - name: Generate PDFs
       run: |
         mkdir -p papers/pdfs
-        for mdfile in papers/*.md; do
-          pdffile="papers/pdfs/$(basename "${mdfile%.md}.pdf")"
-          pandoc "$mdfile" --pdf-engine=pdflatex -o "$pdffile"
-        done
+        if compgen -G "papers/*.md" > /dev/null; then
+          for mdfile in papers/*.md; do
+            pdffile="papers/pdfs/$(basename "${mdfile%.md}.pdf")"
+            pandoc "$mdfile" --pdf-engine=pdflatex -o "$pdffile"
+          done
+        else
+          echo "No Markdown files found in the papers directory."
+        fi
 
     - name: Create Release
       id: create_release
@@ -41,10 +45,12 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Upload Release Assets
+      if: success()
       uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: papers/pdfs/
         asset_name: pdfs
         asset_content_type: application/pdf
-        token: ${{ secrets.GITHUB_TOKEN }}
