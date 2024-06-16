@@ -1,0 +1,50 @@
+name: Generate and Commit PDFs
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  generate_and_commit_pdfs:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Install Dependencies
+      run: sudo apt-get install pandoc
+
+    - name: Generate PDFs
+      run: |
+        mkdir -p papers/pdfs
+        for mdfile in papers/*.md; do
+          pdffile="papers/pdfs/$(basename "${mdfile%.md}.pdf")"
+          pandoc "$mdfile" -o "$pdffile"
+        done
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      with:
+        tag_name: ${{ github.sha }}
+        release_name: ${{ github.sha }}
+        body: |
+          This is the latest version of the PDFs.
+          They were generated from the main branch.
+        draft: false
+        prerelease: false
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Upload Release Assets
+      uses: actions/upload-release-asset@v1
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: papers/pdfs/
+        asset_name: pdfs
+        asset_content_type: application/pdf
+        token: ${{ secrets.GITHUB_TOKEN }}
