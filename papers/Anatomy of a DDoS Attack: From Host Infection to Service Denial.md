@@ -9,7 +9,7 @@ authors:
 
 Understanding the mechanisms of Distributed Denial of Service (DDoS) attacks is crucial in cybersecurity. This paper explores the lifecycle of a DDoS attack, from the initial infection of hosts to the denial of service for a website. 
 
-## Summary
+# Summary
 
 1. [The Sandbox](#The-Sandbox)
 2. [Host Compromise](#Host-Compromise)
@@ -17,16 +17,15 @@ Understanding the mechanisms of Distributed Denial of Service (DDoS) attacks is 
 4. [Demo](#Demo)
 5. [Forensics](#Forensics)
 
-## The Sandbox
+# The Sandbox
 
 In this chapter, we describe the setup and tools used to emulate and monitor the DDoS attack environment.
 
-### Network Emulation with Mininet
+## Network Emulation with Mininet
 
 We use Mininet to create a virtual network for our DDoS attack simulation. Mininet allows us to emulate a realistic network topology with minimal hardware requirements.
 
-#### Network Topology
-
+### Network Topology
 
 Our network topology consists of the following components:
 
@@ -42,20 +41,20 @@ The network topology can be visualized as follows:
 
 ![](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.assets/sandbox-network-diagram.jpg)
 
-### Monitoring Tools
+## Monitoring Tools
 
 To monitor and analyze the network traffic and performance, we use `bwm-ng` (Bandwidth Monitor NG) to monitor the throughput on network interfaces. This helps us understand the volume of traffic generated during the attack.
 
 We also use `tcpdump` to capture and analyze packets on the network. It provides detailed insights into the nature of the traffic and helps in understanding the attack patterns and the commands between compromised hosts and the command and control server.
 
-## Host Compromise
+# Host Compromise
 
-## Launching the Attack
+# Launching the Attack
 
-## Demo
+# Demo
 
-## Forensics
+# Forensics
 
-## Conclusion and Mitigation
+# Conclusion and Mitigation
 
-## Sources
+# Sources
