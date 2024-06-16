@@ -1,0 +1,72 @@
+name: Generate and Release PDFs
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  generate_pdfs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Install Dependencies
+        run: sudo apt-get update && sudo apt-get install -y texlive texlive-latex-extra pandoc
+
+      - name: Generate PDFs
+        run: |
+          mkdir -p papers/pdfs
+          if compgen -G "papers/*.md" > /dev/null; then
+            for mdfile in papers/*.md; do
+              pdffile="papers/pdfs/$(basename "${mdfile%.md}.pdf")"
+              pandoc "$mdfile" --pdf-engine=pdflatex -o "$pdffile"
+            done
+          else
+            echo "No Markdown files found in the papers directory."
+          fi
+
+      - name: Tar PDFs
+        run: tar -czf papers.tar.gz papers
+
+      - name: Upload PDFs
+        uses: actions/upload-artifact@v2
+        with:
+          name: papers
+          path: papers.tar.gz
+          if-no-files-found: error
+
+  release:
+    needs: generate_pdfs
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Download PDFs
+        uses: actions/download-artifact@v2
+        with:
+          name: papers
+
+      - name: Extract PDFs
+        run: tar -xzf papers.tar.gz
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "lts/*"
+
+      - name: Install dependencies
+        run: npm clean-install
+
+      - name: Release
+        id: release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release
