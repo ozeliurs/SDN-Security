@@ -31,14 +31,18 @@ jobs:
           echo "No Markdown files found in the papers directory."
         fi
 
+    - name: Get Current Date
+      id: date
+      run: echo "::set-output name=date::$(date +'%Y%m%d%H%M%S')"
+
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ github.sha }}
-        release_name: ${{ github.sha }}
+        tag_name: release-${{ steps.date.outputs.date }}
+        release_name: Release ${{ steps.date.outputs.date }}
         body: |
           This is the latest version of the PDFs.
           They were generated from the main branch.
