@@ -21,9 +21,9 @@ jobs:
 
     - name: Generate PDFs
       run: |
-        mkdir -p report/pdfs
-        for mdfile in report/*.md; do
-          pdffile="report/pdfs/$(basename "${mdfile%.md}.pdf")"
+        mkdir -p papers/pdfs
+        for mdfile in papers/*.md; do
+          pdffile="papers/pdfs/$(basename "${mdfile%.md}.pdf")"
           pandoc "$mdfile" --pdf-engine=pdflatex -o "$pdffile"
         done
 
@@ -44,7 +44,7 @@ jobs:
       uses: actions/upload-release-asset@v1
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: report/pdfs/
+        asset_path: papers/pdfs/
         asset_name: pdfs
         asset_content_type: application/pdf
         token: ${{ secrets.GITHUB_TOKEN }}
