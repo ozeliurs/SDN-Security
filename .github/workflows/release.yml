@@ -55,7 +55,7 @@ jobs:
           name: papers
 
       - name: Extract PDFs
-        run: tar -xzf papers.tar.gz
+        run: tar -xzf papers.tar.gz && ls -la
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
