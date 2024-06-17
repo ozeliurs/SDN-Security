@@ -54,9 +54,9 @@ We create the network with a python script available in *Annex B*.
 
 We then want to make some hosts intentionally vulnerable to be compromised.
 
-On one host, we will install a vulnerable web application (DVWA - Damn Vulnerable Web Application) to demonstrate how an RFI vulnerability can be exploited to compromise a host. We can use the script in
+On one host, we will install a vulnerable web application (DVWA - Damn Vulnerable Web Application).
 
-On the other host, we will install an SSH server with a weak password to demonstrate how a dictionary attack can compromise a host.
+On the other host, we will install an SSH server with a weak password.
 
 The installation scripts are available in *Annex B*.
 
@@ -200,15 +200,17 @@ def create_network():
     # Start the network
     net.start()
     
+    # Install docker on h2
+    h2.cmd('curl -fsSL https://get.docker.com | sh')
     # Install DVWA on h2
-    h2.cmd('wget https://raw.githubusercontent.com/IamCarron/DVWA-Script/main/Install-DVWA.sh')
-    h2.cmd('chmod +x Install-DVWA.sh')
-    h2.cmd('yes "" | sudo ./Install-DVWA.sh')
-    # Open the Mininet CLI
-    CLI(net)
+    h2.cmd('wget https://raw.githubusercontent.com/digininja/DVWA/master/compose.yml')
+    h2.cmd('docker-compose -f compose.yml up -d')
     
-    # Stop the network
-    net.stop()
+    # Enable SSH on h5
+    h5.cmd('apt-get update')
+    h5.cmd('apt-get install -y openssh-server')
+    # Set a weak password for root (toor)
+    h5.cmd('echo "root:toor" | chpasswd')
 
 if __name__ == '__main__':
     setLogLevel('info')
