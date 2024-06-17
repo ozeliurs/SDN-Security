@@ -5,6 +5,14 @@ author:
   - BILLY Maxime
 ---
 
+# Acknowledgements
+
+We would like to express our sincere gratitude to our internship supervisor at VKU, Hoang Huu Duc, for his valuable guidance and support throughout our internship.
+
+We also wish to thank the Vietnamese Korean University (VKU) for providing us with the opportunity to work in their buildings in a welcoming environment.
+
+Additionally, our thanks go to the VKU Security Lab (VSL) for the training provided through their CTF platform ([vsl.ce.vku.udn.vn](https://vsl.ce.vku.udn.vn/)). The interactive challenges have greatly enhanced our cybersecurity skills.
+
 # Introduction
 
 Understanding the mechanisms of Distributed Denial of Service (DDoS) attacks is crucial in cybersecurity. This paper explores the lifecycle of a DDoS attack, from the initial infection of hosts to the denial of service for a website. 
@@ -41,6 +49,16 @@ Our network topology consists of the following components:
 The network topology can be visualized in *Annex A*.
 
 We create the network with a python script available in *Annex B*.
+
+### Host Configuration
+
+We then want to make some hosts intentionally vulnerable to be compromised.
+
+On one host, we will install a vulnerable web application (DVWA - Damn Vulnerable Web Application) to demonstrate how an RFI vulnerability can be exploited to compromise a host. We can use the script in
+
+On the other host, we will install an SSH server with a weak password to demonstrate how a dictionary attack can compromise a host.
+
+The installation scripts are available in *Annex B*.
 
 ## Monitoring Tools
 
@@ -104,7 +122,17 @@ Effective mitigation strategies include enforcing strong password policies, impl
 
 These measures collectively enhance security by reducing the risk posed by weak passwords and misconfigurations.
 
-## Exploiting a Vulnerability (e.g., Log4j)
+## Exploiting a Vulnerability (e.g., SQLi, RFIs)
+
+Poorly secured web applications can be exploited to compromise hosts. Remote File Inclusion (RFI) is a common vulnerability that allows attackers to include files from a remote server. This can be used to execute arbitrary code on the server and compromise the host.
+
+By accessing `http://<WEBSERVER_IP>/DVWA/vulnerabilities/upload/` we have unrestricted upload capabilities. We can upload a PHP file that will be executed by the server.
+
+```php
+<?php system($_GET['cmd']);?>
+```
+
+This PHP file allows us to execute arbitrary commands on the server by passing them as a GET parameter. We can then access the file by visiting `http://<WEBSERVER_IP>/DVWA/hackable/uploads/<FILENAME>.php?cmd=<COMMAND>`. This allows us to execute arbitrary commands on the server.
 
 # Launching the Attack
 
@@ -115,6 +143,10 @@ These measures collectively enhance security by reducing the risk posed by weak 
 # Conclusion and Mitigation
 
 # Sources
+
+### Host Compromise
+
+https://github.com/digininja/DVWA
 
 # Annexes
 
@@ -168,6 +200,10 @@ def create_network():
     # Start the network
     net.start()
     
+    # Install DVWA on h2
+    h2.cmd('wget https://raw.githubusercontent.com/IamCarron/DVWA-Script/main/Install-DVWA.sh')
+    h2.cmd('chmod +x Install-DVWA.sh')
+    h2.cmd('yes "" | sudo ./Install-DVWA.sh')
     # Open the Mininet CLI
     CLI(net)
     
