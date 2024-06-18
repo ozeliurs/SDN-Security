@@ -42,17 +42,25 @@ def create_network():
     # Start the network
     net.start()
 
-    # Install docker on h2
-    h2.cmd('curl -fsSL https://get.docker.com | sh')
-    # Install DVWA on h2
-    h2.cmd('wget https://raw.githubusercontent.com/digininja/DVWA/master/compose.yml')
-    h2.cmd('docker-compose -f compose.yml up -d')
+    # Install php and apache on h2
+    h2.cmd('apt-get update && apt-get install -y apache2 php')
+    # Start apache
+    h2.cmd('service apache2 start')
+    # Download the vulnerable web application
+    h2.cmd('rm /var/www/html/index.html')
+    h2.cmd('wget https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/vuln-webserver.html -O /var/www/html/index.html')
+    # Allow uploads
+    h2.cmd('mkdir /var/www/html/uploads && chmod 777 /var/www/html/uploads')
 
     # Enable SSH on h5
     h5.cmd('apt-get update')
     h5.cmd('apt-get install -y openssh-server')
     # Set a weak password for root (toor)
     h5.cmd('echo "root:toor" | chpasswd')
+
+    # Simulate phishing on h4
+    h4.cmd('wget https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/simple-virus.py -O virus.py')
+    h4.cmd('python virus.py &')
 
 
 if __name__ == '__main__':

