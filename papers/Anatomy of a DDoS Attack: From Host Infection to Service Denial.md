@@ -124,8 +124,6 @@ We can write a Python script that uses the `paramiko` library to attempt to conn
 
 This script attempts to connect to the SSH server using the provided passwords. If a connection is successful, it prints the password used.
 
-This example highlights the severe risk posed by weak passwords and emphasizes the importance of securing services with strong, unique passwords and proper configurations to prevent unauthorized access.
-
 ### Mitigation
 
 Effective mitigation strategies include enforcing strong password policies, implementing public key authentication for SSH, disabling password authentication where possible, and deploying security tools like `fail2ban` to block brute force attacks.
@@ -144,7 +142,7 @@ By uploading a PHP file (let's call it `exploit.php`) that allows command execut
 
 By accessing `http://<WEBSERVER_IP>/uploads/exploit.php?cmd=ls`, we see that the command `ls` is executed on the server and the output is displayed in the browser.
 
-### Mitication
+### Mitigation
 
 To mitigate such vulnerabilities, it is essential to keep web applications up to date, apply security patches promptly, and conduct regular security audits to identify and address potential vulnerabilities.
 
