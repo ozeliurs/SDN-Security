@@ -11,7 +11,7 @@ We would like to express our sincere gratitude to our internship supervisor at V
 
 We also wish to thank the Vietnamese Korean University (VKU) for providing us with the opportunity to work in their buildings in a welcoming environment.
 
-Additionally, our thanks go to the VKU Security Lab (VSL) for the training provided through their CTF platform ([vsl.ce.vku.udn.vn](https://vsl.ce.vku.udn.vn/)). The interactive challenges have greatly enhanced our cybersecurity skills.
+Additionally, our thanks go to the VKU Security Lab (VSL) for the training provided through their CTF platform ([*vsl.ce.vku.udn.vn*](https://vsl.ce.vku.udn.vn/)). The interactive challenges have greatly enhanced our cybersecurity skills.
 
 # Introduction
 
@@ -19,12 +19,12 @@ Understanding the mechanisms of Distributed Denial of Service (DDoS) attacks is 
 
 # Summary
 
-1. [The Sandbox](#The-Sandbox)
-2. [Building a simple virus](#Building-a-simple-virus)
-2. [Host Compromise](#Host-Compromise)
-3. [Launching the Attack](#Launching-the-Attack)
-4. [Demo](#Demo)
-5. [Forensics](#Forensics)
+1. [*The Sandbox*](#The-Sandbox)
+2. [*Building a simple virus*](#Building-a-simple-virus)
+2. [*Host Compromise*](#Host-Compromise)
+3. [*Launching the Attack*](#Launching-the-Attack)
+4. [*Demo*](#Demo)
+5. [*Forensics*](#Forensics)
 
 # The Sandbox
 
@@ -46,9 +46,9 @@ Our network topology consists of the following components:
 
 - **1 Client Host** (green): This host attempts to connect to the server and experiences the effects of the DDoS attack.
 
-The network topology can be visualized on [GitHub](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.assets/sandbox-network-diagram.jpg).
+The network topology can be visualized on [*GitHub*](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.assets/sandbox-network-diagram.jpg).
 
-We create the network with a python script available on [GitHub](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/lab-setup.py).
+We create the network with a python script available on [*GitHub*](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/lab-setup.py).
 
 ### Host Configuration
 
@@ -58,7 +58,7 @@ On one host, we will install a vulnerable web application (DVWA - Damn Vulnerabl
 
 On the other host, we will install an SSH server with a weak password.
 
-The installation scripts are available on [GitHub](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/lab-setup.py).
+The installation scripts are available on [*GitHub*](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/lab-setup.py).
 
 ## Monitoring Tools
 
@@ -70,7 +70,7 @@ We also use `tcpdump` to capture and analyze packets on the network. It provides
 
 We will need to control the hosts in the future. To do so, we will create a simple virus that connects to a command and control server to receive commands.
 
-The virus is available on [GitHub](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/simple-virus.py).
+The virus is available on [*GitHub*](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/simple-virus.py).
 
 This script runs indefinitely, it retrieves the command from the command and control server (`requests.get(url)`) and executes it (`subprocess.call(command, shell=True)`). The script then sleeps for 10 seconds between each command execution.
 
@@ -110,7 +110,7 @@ Verify sender information, be cautious with links and attachments, and keep soft
 
 Weak passwords and poorly configured services can significantly compromise the security of a host. In this section, we will demonstrate how an SSH server with a weak password can be exploited using a simple dictionary attack.
 
-We can write a Python script that uses the `paramiko` library to attempt to connect to the server using a list of common passwords, the script is available on [GitHub](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/ssh-bruteforce.py).
+We can write a Python script that uses the `paramiko` library to attempt to connect to the server using a list of common passwords, the script is available on [*GitHub*](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/ssh-bruteforce.py).
 
 This script attempts to connect to the SSH server using the provided passwords. If a connection is successful, it prints the password used.
 
