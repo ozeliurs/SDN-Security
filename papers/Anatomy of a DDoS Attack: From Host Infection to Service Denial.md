@@ -17,6 +17,8 @@ Additionally, our thanks go to the VKU Security Lab (VSL) for the training provi
 
 Understanding the mechanisms of Distributed Denial of Service (DDoS) attacks is crucial in cybersecurity. This paper explores the lifecycle of a DDoS attack, from the initial infection of hosts to the denial of service for a website. 
 
+> All the scripts, tools and source code of this paper are available on [*GitHub*](https://github.com/ozeliurs/SDN-Security/tree/main/papers).
+
 # Summary
 
 1. [*The Sandbox*](#The-Sandbox)
