@@ -27,7 +27,7 @@
 
 - name: Run Mininet + OVS test
   become: true
-  shell: sudo mn --switch ovsbr --test pingall
+  shell: mn --switch ovsbr --test pingall
   register: mininet_test
   changed_when: false
 

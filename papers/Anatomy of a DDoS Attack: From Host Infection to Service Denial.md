@@ -5,7 +5,7 @@ author:
   - BILLY Maxime
 ---
 
-# Acknowledgements
+# Acknowledgments
 
 We would like to express our sincere gratitude to our internship supervisor at VKU, Hoang Huu Duc, for his valuable guidance and support throughout our internship.
 
@@ -15,7 +15,7 @@ Additionally, our thanks go to the VKU Security Lab (VSL) for the training provi
 
 # Introduction
 
-Understanding the mechanisms of Distributed Denial of Service (DDoS) attacks is crucial in cybersecurity. This paper explores the lifecycle of a DDoS attack, from the initial infection of hosts to the denial of service for a website. 
+Understanding the mechanisms of Distributed Denial of Service (DDoS) attacks is crucial in cybersecurity. This paper explores the life-cycle of a DDoS attack, from the initial infection of hosts to the denial of service for a website. 
 
 > All the scripts, tools and source code of this paper are available on [_GitHub_](https://github.com/ozeliurs/SDN-Security/tree/main/papers).
 
@@ -56,7 +56,7 @@ We create the network with a python script available on [_GitHub_](https://raw.g
 
 We then want to make some hosts intentionally vulnerable to be compromised.
 
-On one host, we will install a vulnerable web application, the source code of which is available on [_GitHub_](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/vuln-webserver.html).
+On one host, we will install a vulnerable web application, the source code of which is available on [_GitHub_](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/vuln-webserver.php).
 
 On the other host, we will install an SSH server with a weak password.
 
@@ -89,7 +89,14 @@ python3 simple-virus.py &
 
 ## Control and Command Server
 
-TODO
+As seen before, the virus connects to a command and control server to receive commands.
+
+We install a simple server and serve a text file on `http://0.0.0.0:80/command` with the desired command to be executed.
+
+For the moment we will only use the `ls` command to list the files in the directory.
+
+Find the installation details on [_GitHub_](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/lab-setup.py).
+
 
 # Host Compromise
 
@@ -139,7 +146,7 @@ These measures collectively enhance security by reducing the risk posed by weak 
 
 Poorly secured web applications can be exploited to compromise hosts. In this example, the web application allows us to upload files, which can be exploited to execute arbitrary commands on the server.
 
-By uploading a PHP file (let's call it `exploit.php`) that allows command execution from the URL parameters, we can compromise the server and gain control over it.
+By uploading a PHP file (let's call it `upload.php`) that allows command execution from the URL parameters, we can compromise the server and gain control over it.
 
 ```php
 <?php system($_GET['cmd']);?>
@@ -153,9 +160,11 @@ To mitigate such vulnerabilities, it is essential to keep web applications up to
 
 In this case to patch the web application, we can check the file type and allow only specific file types to be uploaded. Additionally, we can verify that the size of the uploaded file does not exceed a certain limit. And finally sanitize the filename to prevent directory traversal attacks.
 
-The patched web application is available on [_GitHub_](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/patched-webserver.html).
+The patched web application is available on [_GitHub_](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/patched-webserver.php).
 
 # Launching the Attack
+
+
 
 # Demo
 
