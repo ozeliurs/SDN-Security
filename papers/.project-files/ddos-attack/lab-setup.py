@@ -18,20 +18,20 @@ def create_network():
     s3 = net.addSwitch('s3')
 
     # Add hosts and links to s1
-    h1 = net.addHost('h1')
-    h2 = net.addHost('h2')
+    h1 = net.addHost('h1', ip='10.42.0.1')
+    h2 = net.addHost('h2', ip='10.42.0.2')
     net.addLink(h1, s1, bw=200)
     net.addLink(h2, s1, bw=100)
 
     # Add hosts and links to s2
-    h3 = net.addHost('h3')
-    h4 = net.addHost('h4')
+    h3 = net.addHost('h3', ip='10.42.0.3')
+    h4 = net.addHost('h4', ip='10.42.0.4')
     net.addLink(h3, s2, bw=100)
     net.addLink(h4, s2, bw=100)
 
     # Add hosts and links to s3
-    h5 = net.addHost('h5')
-    h6 = net.addHost('h6')
+    h5 = net.addHost('h5', ip='10.42.0.5')
+    h6 = net.addHost('h6', ip='10.42.0.6')
     net.addLink(h5, s3, bw=100)
     net.addLink(h6, s3, bw=100)
 
@@ -41,6 +41,12 @@ def create_network():
 
     # Start the network
     net.start()
+
+    # Install a simple webserver on h5 (attacker node (C2 Server))
+    h5.cmd('apt-get update && apt-get install -y apache2')
+    h5.cmd('service apache2 start')
+    # Create a command file
+    h5.cmd('echo "ls" > /var/www/html/command')
 
     # Install php and apache on h2
     h2.cmd('apt-get update && apt-get install -y apache2 php')

