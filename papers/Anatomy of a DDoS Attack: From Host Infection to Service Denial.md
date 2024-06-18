@@ -89,7 +89,14 @@ python3 simple-virus.py &
 
 ## Control and Command Server
 
-TODO
+As seen before, the virus connects to a command and control server to receive commands.
+
+We install a simple server and serve a text file on `http://0.0.0.0:80/command` with the desired command to be executed.
+
+For the moment we will only use the `ls` command to list the files in the directory.
+
+Find the installation details on [_GitHub_](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/lab-setup.py).
+
 
 # Host Compromise
 
@@ -156,6 +163,8 @@ In this case to patch the web application, we can check the file type and allow 
 The patched web application is available on [_GitHub_](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/patched-webserver.html).
 
 # Launching the Attack
+
+
 
 # Demo
 
