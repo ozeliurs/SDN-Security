@@ -1,15 +1,13 @@
 from subprocess import Popen
 
 from mininet.net import Mininet
-from mininet.node import Controller, OVSSwitch
-from mininet.link import TCLink
-from mininet.cli import CLI
+from mininet.node import OVSController
 from mininet.log import setLogLevel
 
 
 def create_network():
     # Create a network
-    net = Mininet(controller=Controller, link=TCLink, switch=OVSSwitch)
+    net = Mininet(controller=OVSController)
 
     # Add a controller
     net.addController('c0')
@@ -77,6 +75,8 @@ def create_network():
     for i in range(1, 4):
         for j in range(1, 3):
             Popen(f"tcpdump -i s{i}-eth{j} -w /tmp/s{i}-eth{j}.pcap &", shell=True).wait()
+
+    net.pingAll()
 
     input("Press Enter to stop the network...")
 
