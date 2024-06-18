@@ -54,7 +54,7 @@ def create_network():
     h2.cmd('service apache2 start')
     # Download the vulnerable web application
     h2.cmd('rm /var/www/html/index.html')
-    h2.cmd('wget https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/vuln-webserver.html -O /var/www/html/index.html')
+    h2.cmd('wget https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/vuln-webserver.php -O /var/www/html/upload.php')
     # Allow uploads
     h2.cmd('mkdir /var/www/html/uploads && chmod 777 /var/www/html/uploads')
 

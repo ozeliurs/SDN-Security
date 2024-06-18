@@ -56,7 +56,7 @@ We create the network with a python script available on [_GitHub_](https://raw.g
 
 We then want to make some hosts intentionally vulnerable to be compromised.
 
-On one host, we will install a vulnerable web application, the source code of which is available on [_GitHub_](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/vuln-webserver.html).
+On one host, we will install a vulnerable web application, the source code of which is available on [_GitHub_](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/vuln-webserver.php).
 
 On the other host, we will install an SSH server with a weak password.
 
@@ -146,7 +146,7 @@ These measures collectively enhance security by reducing the risk posed by weak 
 
 Poorly secured web applications can be exploited to compromise hosts. In this example, the web application allows us to upload files, which can be exploited to execute arbitrary commands on the server.
 
-By uploading a PHP file (let's call it `exploit.php`) that allows command execution from the URL parameters, we can compromise the server and gain control over it.
+By uploading a PHP file (let's call it `upload.php`) that allows command execution from the URL parameters, we can compromise the server and gain control over it.
 
 ```php
 <?php system($_GET['cmd']);?>
@@ -160,7 +160,7 @@ To mitigate such vulnerabilities, it is essential to keep web applications up to
 
 In this case to patch the web application, we can check the file type and allow only specific file types to be uploaded. Additionally, we can verify that the size of the uploaded file does not exceed a certain limit. And finally sanitize the filename to prevent directory traversal attacks.
 
-The patched web application is available on [_GitHub_](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/patched-webserver.html).
+The patched web application is available on [_GitHub_](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/patched-webserver.php).
 
 # Launching the Attack
 
