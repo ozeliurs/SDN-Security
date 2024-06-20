@@ -109,7 +109,7 @@ time.sleep(10)
 cprint("    [+] Press Ctrl+C once to stop the attack or wait for 30 seconds...")
 start = time.time()
 try:
-    while True and time.time() - start < 30:
+    while time.time() - start < 30:
         print(ping(h3, h1))
         time.sleep(1)
 except KeyboardInterrupt:
