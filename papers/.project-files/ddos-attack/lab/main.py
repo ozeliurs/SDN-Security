@@ -6,7 +6,6 @@ from typing import List
 
 from mininet.net import Mininet
 from mininet.node import OVSController
-from mininet.log import setLogLevel
 
 from topo import DDOSTopo
 
@@ -14,8 +13,10 @@ from topo import DDOSTopo
 def cprint(text, sep=" ", end="\n"):
     print(f"\033[96m{text}\033[0m", sep=sep, end=end)
 
+
 def ping(source, target, times=1, timeout=1) -> List[float]:
     return [source.cmd(f"ping -c 1 -w {timeout} {target.IP()} | grep time=").strip() for _ in range(times)]
+
 
 results = Path("/tmp/results")
 results.mkdir(exist_ok=True)
@@ -154,5 +155,3 @@ Popen("tar -czf /tmp/results.tar.gz -C /tmp results", shell=True).wait()
 
 cprint("[+] Results are ready.")
 cprint(f"[+] Results are saved in: {results / 'results.tar.gz'}")
-
-
