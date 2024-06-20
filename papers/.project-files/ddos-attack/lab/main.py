@@ -86,7 +86,7 @@ cprint("[+] Hosts are infected.")
 
 cprint("[+] Starting bandwidth monitoring tools...")
 (results / "bwm-ng.log").unlink(missing_ok=True)
-Popen("bwm-ng -o csv -t 1000 -u bits -T rate -C ',' > /tmp/results/bwm-ng.log &", shell=True).wait()
+Popen("bwm-ng -o csv -t 250 -u bits -T rate -C ',' > /tmp/results/bwm-ng.log &", shell=True).wait()
 
 cprint("[+] Starting packet capture...")
 for i, j in itertools.product(range(1, 4), range(1, 3)):
