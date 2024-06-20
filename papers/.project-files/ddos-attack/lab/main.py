@@ -106,9 +106,10 @@ h5.cmd(f"echo \"{cmd}\" > command")
 cprint("    [+] Waiting for the attack to take effect...")
 time.sleep(10)
 
-cprint("    [+] Press Ctrl+C once to stop the attack...")
+cprint("    [+] Press Ctrl+C once to stop the attack or wait for 30 seconds...")
+start = time.time()
 try:
-    while True:
+    while True and time.time() - start < 30:
         print(ping(h3, h1))
         time.sleep(1)
 except KeyboardInterrupt:
