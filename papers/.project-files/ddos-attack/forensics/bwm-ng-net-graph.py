@@ -1,10 +1,13 @@
+import re
 from pathlib import Path
 
-import pandas as pd
-import networkx as nx
+import imageio
 import matplotlib.pyplot as plt
+import networkx as nx
 import numpy as np
-import re
+import pandas as pd
+from tqdm import tqdm
+from colour import Color
 
 # Read the file
 lines = Path('bwm_ng.log').read_text().splitlines()
@@ -41,12 +44,6 @@ for line in lines:
 # Convert to DataFrame
 df = pd.DataFrame(data)
 
-# Count the number of bytes in for each interface
-bytes_in = df.groupby('interface')['bytes_in'].sum()
-
-# Count the number of bytes out for each interface
-bytes_out = df.groupby('interface')['bytes_out'].sum()
-
 G = nx.DiGraph()
 
 for node in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']:
@@ -56,32 +53,71 @@ for node in ['s1', 's2', 's3']:
     G.add_node(node)
 
 G.add_weighted_edges_from([
-    ('h1', 's1', bytes_in['s1-eth1']),
-    ('s1', 'h1', bytes_out['s1-eth1']),
-    ('h2', 's1', bytes_in['s1-eth2']),
-    ('s1', 'h2', bytes_out['s1-eth2']),
-    ('h3', 's2', bytes_in['s2-eth1']),
-    ('s2', 'h3', bytes_out['s2-eth1']),
-    ('h4', 's2', bytes_in['s2-eth2']),
-    ('s2', 'h4', bytes_out['s2-eth2']),
-    ('h5', 's3', bytes_in['s3-eth1']),
-    ('s3', 'h5', bytes_out['s3-eth1']),
-    ('h6', 's3', bytes_in['s3-eth2']),
-    ('s3', 'h6', bytes_out['s3-eth2']),
-    ('s1', 's2', bytes_in['s2-eth3']),
-    ('s2', 's1', bytes_out['s1-eth3']),
-    ('s2', 's3', bytes_in['s3-eth3']),
-    ('s3', 's2', bytes_out['s2-eth4'])
+    ('h1', 's1', 1),
+    ('s1', 'h1', 1),
+    ('h2', 's1', 1),
+    ('s1', 'h2', 1),
+    ('h3', 's2', 1),
+    ('s2', 'h3', 1),
+    ('h4', 's2', 1),
+    ('s2', 'h4', 1),
+    ('h5', 's3', 1),
+    ('s3', 'h5', 1),
+    ('h6', 's3', 1),
+    ('s3', 'h6', 1),
+    ('s1', 's2', 1),
+    ('s2', 's1', 1),
+    ('s2', 's3', 1),
+    ('s3', 's2', 1)
 ])
 
-print(G.edges(data=True))
-
 # Draw the graph with width of the edges representing the number of packets
-fig, ax = plt.subplots()
 pos = nx.spring_layout(G, weight=None)
-nx.draw_networkx_nodes(G, pos, ax=ax)
-nx.draw_networkx_labels(G, pos, ax=ax)
 
-edge_width = [np.log1p(G[u][v]['weight'])/4 for u, v in G.edges]
-nx.draw_networkx_edges(G, pos, ax=ax, width=edge_width, connectionstyle='arc3,rad=0.1', edge_color='gray')
-plt.show()
+Path('tmp/*').unlink(missing_ok=True)
+Path('tmp').mkdir(exist_ok=True)
+
+colors = list(Color("green").range_to(Color("red"),101))
+
+mini = min(df['bytes_in_s'].min(), df['bytes_out_s'].min())
+maxi = max(df['bytes_in_s'].max(), df['bytes_out_s'].max())
+
+for timestamp, df_group in tqdm(df.groupby('timestamp')):
+    fig, ax = plt.subplots()
+    ax.set_title(f'Timestamp: {timestamp}')
+    nx.draw_networkx_nodes(G, pos, ax=ax)
+    nx.draw_networkx_labels(G, pos, ax=ax)
+
+    edges = [
+        ('h1', 's1', df_group[(df_group['interface'] == 's1-eth1')]['bytes_in_s'].sum()),
+        ('s1', 'h1', df_group[(df_group['interface'] == 's1-eth1')]['bytes_out_s'].sum()),
+        ('h2', 's1', df_group[(df_group['interface'] == 's1-eth2')]['bytes_in_s'].sum()),
+        ('s1', 'h2', df_group[(df_group['interface'] == 's1-eth2')]['bytes_out_s'].sum()),
+        ('h3', 's2', df_group[(df_group['interface'] == 's2-eth1')]['bytes_in_s'].sum()),
+        ('s2', 'h3', df_group[(df_group['interface'] == 's2-eth1')]['bytes_out_s'].sum()),
+        ('h4', 's2', df_group[(df_group['interface'] == 's2-eth2')]['bytes_in_s'].sum()),
+        ('s2', 'h4', df_group[(df_group['interface'] == 's2-eth2')]['bytes_out_s'].sum()),
+        ('h5', 's3', df_group[(df_group['interface'] == 's3-eth1')]['bytes_in_s'].sum()),
+        ('s3', 'h5', df_group[(df_group['interface'] == 's3-eth1')]['bytes_out_s'].sum()),
+        ('h6', 's3', df_group[(df_group['interface'] == 's3-eth2')]['bytes_in_s'].sum()),
+        ('s3', 'h6', df_group[(df_group['interface'] == 's3-eth2')]['bytes_out_s'].sum()),
+        ('s1', 's2', df_group[(df_group['interface'] == 's1-eth3')]['bytes_out_s'].sum()),
+        ('s2', 's1', df_group[(df_group['interface'] == 's1-eth3')]['bytes_in_s'].sum()),
+        ('s2', 's3', df_group[(df_group['interface'] == 's2-eth4')]['bytes_out_s'].sum()),
+        ('s3', 's2', df_group[(df_group['interface'] == 's2-eth4')]['bytes_in_s'].sum())
+    ]
+
+    edge_width = [np.log1p(edge[2]) / 4 for edge in edges]
+    for i, edge in enumerate(edges):
+        c = colors[int((edge[2] - mini) / (maxi - mini) * 100)]
+        nx.draw_networkx_edges(G, pos, ax=ax, edgelist=[edge], width=edge_width[i], connectionstyle='arc3,rad=0.3', edge_color=c.hex)
+    # nx.draw_networkx_edges(G, pos, ax=ax, width=edge_width, connectionstyle='arc3,rad=0.3', edge_color='gray')
+    plt.savefig(f'tmp/{timestamp}.png')
+    plt.close(fig)
+
+images = []
+for filename in sorted(Path('tmp').iterdir()):
+    images.append(imageio.imread(filename))
+
+Path('bwm_ng.gif').unlink(missing_ok=True)
+imageio.mimsave('bwm_ng.gif', images, duration=0.5)
