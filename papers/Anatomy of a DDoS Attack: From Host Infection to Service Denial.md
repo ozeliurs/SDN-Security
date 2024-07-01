@@ -50,17 +50,13 @@ Our network topology consists of the following components:
 
 The network topology can be visualized on [_GitHub_](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.assets/sandbox-network-diagram.jpg).
 
-We create the network with a python script available on [_GitHub_](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/lab-setup.py).
+We create the network with a python script available on [_GitHub_](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/lab/topo.py).
 
 ### Host Configuration
 
 We then want to make some hosts intentionally vulnerable to be compromised.
 
-On one host, we will install a vulnerable web application, the source code of which is available on [_GitHub_](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/vuln-webserver.php).
-
-On the other host, we will install an SSH server with a weak password.
-
-The installation scripts are available on [_GitHub_](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/lab-setup.py).
+In the [Host Compromise](#Host-Compromise) chapter, we describe how we can compromise hosts through phishing, weak passwords, and vulnerabilities but for simplicity, we will launch the virus on the compromised hosts directly. This simulates the post-compromise phase of the attack.
 
 ## Monitoring Tools
 
@@ -74,7 +70,7 @@ We also use `tcpdump` to capture and analyze packets on the network. It provides
 
 We will need to control the hosts in the future. To do so, we will create a simple virus that connects to a command and control server to receive commands.
 
-The virus is available on [_GitHub_](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/simple-virus.py).
+The virus is available on [_GitHub_](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/virus/simple-virus.py).
 
 This script runs indefinitely, it retrieves the command from the command and control server (`requests.get(url)`) and executes it (`subprocess.call(command, shell=True)`). The script then sleeps for 10 seconds between each command execution.
 
@@ -91,12 +87,17 @@ python3 simple-virus.py &
 
 As seen before, the virus connects to a command and control server to receive commands.
 
-We install a simple server and serve a text file on `http://0.0.0.0:80/command` with the desired command to be executed.
+We run a simple python http server like so:
 
-For the moment we will only use the `ls` command to list the files in the directory.
+```bash
+sudo python3 -m http.server 80
+```
 
-Find the installation details on [_GitHub_](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/lab-setup.py).
+The server will host a simple text file with the command to execute. The virus will read this file and execute the command.
 
+```bash
+echo "ls" > command
+```
 
 # Host Compromise
 
@@ -164,11 +165,31 @@ The patched web application is available on [_GitHub_](https://raw.githubusercon
 
 # Launching the Attack
 
+When time comes to DDoS the target, we can use the compromised hosts to generate a large volume of traffic and overwhelm the target server.
 
+The C2 (Command and Control) server can instruct the compromised hosts to send a flood of requests to the target server like so:
+
+```bash
+echo "hping3 --udp --flood <TARGET_IP>" > command
+```
+
+The compromised hosts will then execute the command and flood the target server with UDP packets, causing a denial of service.
 
 # Demo
 
 # Forensics
+
+After we stop the attack, we can analyze the network traffic and bandwidth usage to understand the impact of the DDoS attack on the target server.
+
+`bwm-ng` creates a log file with the network throughput data, we wrote a Python script to parse this log file and generate a graph of the network traffic over time. The script is available on [_GitHub_](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/forensics/bwm-ng-plotter.py).
+
+We can observe the spike in network traffic during the attack.
+
+`h2` on `s1-eth2` is pushing 2 Mbps during the attack.
+`h4` on `s2-eth2` is pushing 3 Mbps during the attack.
+`h5` on `s3-eth1` is pushing 2 Mbps during the attack.
+
+
 
 # Conclusion and Mitigation
 
