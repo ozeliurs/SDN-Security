@@ -191,7 +191,7 @@ This script automates everything from creating the network topology to launching
 
 _Note: The demo requires Mininet to be installed on the system._
 
-![Demo](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.assets/demo.gif)
+[Demo](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.assets/demo.gif)
 
 # Forensics
 
@@ -217,7 +217,7 @@ This network traffic is all directed towards the target server, as seen in the s
 
 The traffic is distributed enough to saturate the 200 Mbps link to the server but not enough to saturate the 1 Gbps links between the switches.
 
-![Global Network Traffic](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.assets/bwm-ng/bwm_ng.gif)
+[Global Network Traffic](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.assets/bwm-ng/bwm_ng.gif)
 
 ## Packet Capture
 
