@@ -170,10 +170,13 @@ When time comes to DDoS the target, we can use the compromised hosts to generate
 The C2 (Command and Control) server can instruct the compromised hosts to send a flood of requests to the target server like so:
 
 ```bash
-echo "hping3 --udp --flood <TARGET_IP>" > command
+echo "sudo hping3 -S --flood -V -d 1200 -p 80 <TARGET_IP>" > command
 ```
 
-The compromised hosts will then execute the command and flood the target server with UDP packets, causing a denial of service.
+// Explain the command
+
+
+The compromised hosts will then execute the command, causing a denial of service.
 
 # Demo
 
@@ -185,9 +188,7 @@ After we stop the attack, we can analyze the network traffic and bandwidth usage
 
 We can observe the spike in network traffic during the attack.
 
-`h2` on `s1-eth2` is pushing 2 Mbps during the attack.
-`h4` on `s2-eth2` is pushing 3 Mbps during the attack.
-`h5` on `s3-eth1` is pushing 2 Mbps during the attack.
+`h2` (`s1-eth2`) and `h4` (`s2-eth2`) pushing 80 Mbps each and `h5` (`s3-eth1`) pushing roughly 60 Mbps.
 
 
 
