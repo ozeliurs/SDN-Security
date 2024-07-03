@@ -48,7 +48,7 @@ Our network topology consists of the following components:
 
 - **1 Client Host** (green): This host attempts to connect to the server and experiences the effects of the DDoS attack.
 
-![Network Topology](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.assets/sandbox-network-diagram.jpg)
+![Network Topology](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/.assets/sandbox-network-diagram.jpg)
 
 We create the network on mininet with the python script [`topo.py`](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/lab/topo.py).
 
@@ -191,7 +191,7 @@ This script automates everything from creating the network topology to launching
 
 _Note: The demo requires Mininet to be installed on the system._
 
-![Demo](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.assets/demo.gif)
+![Demo](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/.assets/demo.gif)
 
 # Forensics
 
@@ -205,19 +205,19 @@ We can observe the spike in network traffic during the attack.
 
 `h2` (`s1-eth2`) and `h4` (`s2-eth2`) pushing 80 Mbps each and `h5` (`s3-eth1`) pushing roughly 60 Mbps.
 
-![H2 Network Traffic](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.assets/bwm-ng/s1-eth2.png)
+![H2 Network Traffic](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/.assets/bwm-ng/s1-eth2.png)
 
-![H4 Network Traffic](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.assets/bwm-ng/s2-eth2.png)
+![H4 Network Traffic](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/.assets/bwm-ng/s2-eth2.png)
 
-![H5 Network Traffic](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.assets/bwm-ng/s3-eth1.png)
+![H5 Network Traffic](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/.assets/bwm-ng/s3-eth1.png)
 
 This network traffic is all directed towards the target server, as seen in the server network traffic graph.
 
-![Server Network Traffic](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.assets/bwm-ng/attack_network_traffic.png)
+![Server Network Traffic](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/.assets/bwm-ng/attack_network_traffic.png)
 
 The traffic is distributed enough to saturate the 200 Mbps link to the server but not enough to saturate the 1 Gbps links between the switches.
 
-![Global Network Traffic](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.assets/bwm-ng/bwm_ng.gif)
+![Global Network Traffic](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/.assets/bwm-ng/bwm_ng.gif)
 
 ## Packet Capture
 
@@ -225,7 +225,7 @@ We can analyze the packets captured by `tcpdump` to understand how the attack wa
 
 Finally, we can deduce how the attack unfolded.
 
-![Sequence Diagram](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.assets/sequence-attack.png)
+![Sequence Diagram](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/.assets/sequence-attack.png)
 
 # Conclusion and Mitigation
 
