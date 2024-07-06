@@ -238,8 +238,8 @@ This work is in part inspired by `MiniAttack` by _Geraked_. The original reposit
 
 ![Network Topology](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/.assets/sandbox-network-diagram.jpg)
 
-![Demo[^1]](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/.assets/demo.gif)
-[^1]: See animated version: [_https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/.assets/demo.gif_](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/.assets/demo.gif)
+![Demo[^3]](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/.assets/demo.gif)
+[^3]: See animated version: [_https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/.assets/demo.gif_](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/.assets/demo.gif)
 
 ![H2 Network Traffic](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/.assets/bwm-ng/s1-eth2.png)
 
@@ -249,8 +249,8 @@ This work is in part inspired by `MiniAttack` by _Geraked_. The original reposit
 
 ![Sent/Received Network Traffic](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/.assets/bwm-ng/attack_network_traffic.png)
 
-![Global Network Traffic[^2]](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/.assets/bwm-ng/bwm_ng.gif)
-[^2]: See animated version: [_https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/.assets/bwm-ng/bwm_ng.gif_](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/.assets/bwm-ng/bwm_ng.gif) 
+![Global Network Traffic[^4]](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/.assets/bwm-ng/bwm_ng.gif)
+[^4]: See animated version: [_https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/.assets/bwm-ng/bwm_ng.gif_](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/.assets/bwm-ng/bwm_ng.gif) 
 
 ![C2 Request](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/.assets/tcpdump/c2_request.png)
 
