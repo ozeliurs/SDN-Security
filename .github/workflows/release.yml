@@ -1,6 +1,9 @@
 name: Generate and Release PDFs
 
-on: push
+on:
+  push:
+    paths:
+      - 'papers/**'
 
 permissions:
   contents: write
