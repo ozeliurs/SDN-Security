@@ -1,8 +1,9 @@
 ---
 title: "Anatomy of a DDoS Attack: From Host Infection to Service Denial"
 author:
-  - STANISLAS Mélanie
-  - BILLY Maxime
+  - STANISLAS Mélanie \texttt{first1.last1@xxxxx.com}
+  - BILLY Maxime \texttt{first1.last1@xxxxx.com}
+  - HOANG HUU Duc \texttt{first1.last1@xxxxx.com}
 ---
 
 # Acknowledgments
