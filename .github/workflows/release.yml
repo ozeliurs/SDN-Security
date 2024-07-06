@@ -42,7 +42,7 @@ jobs:
 
 
   release:
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/hotfix-')
     needs: generate_pdfs
     runs-on: ubuntu-latest
 
@@ -66,7 +66,15 @@ jobs:
       - name: Install dependencies
         run: npm clean-install
 
+      - name: Release Dry Run
+        if: startsWith(github.ref, 'refs/heads/hotfix-')
+        id: release-dry-run
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release --dry-run
+
       - name: Release
+        if: github.ref == 'refs/heads/main'
         id: release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
