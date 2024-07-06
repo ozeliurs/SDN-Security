@@ -220,6 +220,18 @@ By analyzing the packets on `s2-eth1`, we can see that the client host is unable
 
 Finally, we can deduce how the attack unfolded (cf _Fig.10_).
 
+# Conclusion
+
+In this paper, we have delved into the lifecycle of a Distributed Denial of Service (DDoS) attack, from the initial infection of hosts to the execution of a service-denial event. By creating a controlled sandbox environment using Mininet, we demonstrated how DDoS attacks can be emulated, monitored, and analyzed.
+
+We explored various methods of host compromise, including phishing, exploiting weak passwords, and leveraging software vulnerabilities. Each method highlighted the ease with which an attacker can gain control over multiple hosts, transforming them into instruments of a DDoS attack. Our demonstration underscored the importance of robust security practices such as strong password policies, regular software updates, and comprehensive security audits.
+
+The practical implementation of a DDoS attack using compromised hosts illustrated the significant impact such attacks can have on network performance and service availability. By flooding the target server with SYN packets, we effectively rendered it incapable of handling legitimate traffic, thereby achieving the desired denial of service.
+
+Our forensic analysis post-attack provided valuable insights into the behavior of network traffic during a DDoS event. Using tools like bwm-ng and tcpdump, we were able to visualize the surge in network traffic and identify the patterns of communication between the compromised hosts and the command and control server. This analysis is crucial for developing effective mitigation strategies and improving incident response mechanisms.
+
+In conclusion, understanding the anatomy of a DDoS attack is essential for cybersecurity professionals. By dissecting the various stages of such an attack, from host infection to service denial, this paper aims to equip readers with the knowledge needed to anticipate, detect, and counteract DDoS threats. The findings and methodologies presented herein serve as a foundation for further research and development of advanced defense mechanisms against the ever-evolving landscape of cyber threats.
+
 # Sources
 
 This work is in part inspired by `MiniAttack` by _Geraked_. The original repository can be found on [_GitHub_](https://github.com/geraked/miniattack).
@@ -251,15 +263,3 @@ This work is in part inspired by `MiniAttack` by _Geraked_. The original reposit
 ![Client Connection](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/.assets/tcpdump/client_connection.png)
 
 ![Sequence Diagram](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/.assets/sequence-attack.png)
-
-# Conclusion
-
-In this paper, we have delved into the lifecycle of a Distributed Denial of Service (DDoS) attack, from the initial infection of hosts to the execution of a service-denial event. By creating a controlled sandbox environment using Mininet, we demonstrated how DDoS attacks can be emulated, monitored, and analyzed.
-
-We explored various methods of host compromise, including phishing, exploiting weak passwords, and leveraging software vulnerabilities. Each method highlighted the ease with which an attacker can gain control over multiple hosts, transforming them into instruments of a DDoS attack. Our demonstration underscored the importance of robust security practices such as strong password policies, regular software updates, and comprehensive security audits.
-
-The practical implementation of a DDoS attack using compromised hosts illustrated the significant impact such attacks can have on network performance and service availability. By flooding the target server with SYN packets, we effectively rendered it incapable of handling legitimate traffic, thereby achieving the desired denial of service.
-
-Our forensic analysis post-attack provided valuable insights into the behavior of network traffic during a DDoS event. Using tools like bwm-ng and tcpdump, we were able to visualize the surge in network traffic and identify the patterns of communication between the compromised hosts and the command and control server. This analysis is crucial for developing effective mitigation strategies and improving incident response mechanisms.
-
-In conclusion, understanding the anatomy of a DDoS attack is essential for cybersecurity professionals. By dissecting the various stages of such an attack, from host infection to service denial, this paper aims to equip readers with the knowledge needed to anticipate, detect, and counteract DDoS threats. The findings and methodologies presented herein serve as a foundation for further research and development of advanced defense mechanisms against the ever-evolving landscape of cyber threats.
