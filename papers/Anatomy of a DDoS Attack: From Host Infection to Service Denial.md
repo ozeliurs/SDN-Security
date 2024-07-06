@@ -11,7 +11,7 @@ include-before: |
   
   ^3^ _Vietnamese-Korean University, Vietnam_, \texttt{hhduc@vku.udn.vn}
 ---
-
+\newpage
 # Acknowledgments
 
 We would like to express our sincere gratitude to our internship supervisor at VKU, Hoang Huu Duc, for his valuable guidance and support throughout our internship.
