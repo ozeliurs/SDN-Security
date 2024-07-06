@@ -31,7 +31,7 @@ jobs:
           fi
 
       - name: Tar PDFs
-        run: tar -czf papers.tar.gz papers
+        run: tar -czf papers.tar.gz papers/pdfs
 
       - name: Upload PDFs
         uses: actions/upload-artifact@v2
