@@ -1,11 +1,11 @@
 ---
 title: "Anatomy of a DDoS Attack: From Host Infection to Service Denial"
 author:
-  - BILLY Maxime \newline
+  - BILLY Maxime
     \texttt{maxime.billy@etu.univ-cotedazur.fr}
-  - STANISLAS Mélanie \newline
+  - STANISLAS Mélanie
     \texttt{melanie.stanislas@etu.univ-cotedazur.fr}
-  - HOANG HUU Duc \newline
+  - HOANG HUU Duc
     \texttt{hhduc@vku.udn.vn}
 ---
 
