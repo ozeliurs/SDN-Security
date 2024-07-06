@@ -26,16 +26,6 @@ Understanding the mechanisms of Distributed Denial of Service (DDoS) attacks is 
 
 > All the scripts, tools and source code of this paper are available on [_GitHub_](https://github.com/ozeliurs/SDN-Security/tree/main/papers).
 
-# Summary
-
-1. [_The Sandbox_](#The-Sandbox)
-2. [_Building a simple virus_](#Building-a-simple-virus)
-2. [_Host Compromise_](#Host-Compromise)
-3. [_Launching the Attack_](#Launching-the-Attack)
-4. [_Demo_](#Demo)
-5. [_Forensics_](#Forensics)
-6. [_Conclusion_](#Conclusion-and-Mitigation)
-
 # The Sandbox
 
 In this chapter, we describe the setup and tools used to emulate and monitor the DDoS attack environment.
