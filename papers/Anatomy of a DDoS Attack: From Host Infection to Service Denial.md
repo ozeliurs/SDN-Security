@@ -7,7 +7,9 @@ author:
 ---
 
 ^1^ _Polytech Nice Sophia_, \texttt{maxime.billy@etu.univ-cotedazur.fr} 
-^2^ _Polytech Nice Sophia_, \texttt{melanie.stanislas@etu.univ-cotedazur.fr} 
+
+^2^ _Polytech Nice Sophia_, \texttt{melanie.stanislas@etu.univ-cotedazur.fr}
+
 ^3^ _Vietnamese-Korean University, Vietnam_, \texttt{hhduc@vku.udn.vn}
 
 # Acknowledgments
