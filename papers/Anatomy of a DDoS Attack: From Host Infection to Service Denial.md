@@ -1,10 +1,17 @@
 ---
 title: "Anatomy of a DDoS Attack: From Host Infection to Service Denial"
 author:
-  - STANISLAS Mélanie
-  - BILLY Maxime
+  - BILLY Maxime^1^
+  - STANISLAS Mélanie^2^
+  - HOANG HUU Duc^3^
+include-before: |
+  ^1^ _Polytech Nice Sophia_, \texttt{maxime.billy@etu.univ-cotedazur.fr} 
+  
+  ^2^ _Polytech Nice Sophia_, \texttt{melanie.stanislas@etu.univ-cotedazur.fr}
+  
+  ^3^ _Vietnamese-Korean University, Vietnam_, \texttt{hhduc@vku.udn.vn}
 ---
-
+\newpage
 # Acknowledgments
 
 We would like to express our sincere gratitude to our internship supervisor at VKU, Hoang Huu Duc, for his valuable guidance and support throughout our internship.
@@ -18,16 +25,6 @@ Additionally, our thanks go to the VKU Security Lab (VSL) for the training provi
 Understanding the mechanisms of Distributed Denial of Service (DDoS) attacks is crucial in cybersecurity. This paper explores the life-cycle of a DDoS attack, from the initial infection of hosts to the denial of service for a website. 
 
 > All the scripts, tools and source code of this paper are available on [_GitHub_](https://github.com/ozeliurs/SDN-Security/tree/main/papers).
-
-# Summary
-
-1. [_The Sandbox_](#The-Sandbox)
-2. [_Building a simple virus_](#Building-a-simple-virus)
-2. [_Host Compromise_](#Host-Compromise)
-3. [_Launching the Attack_](#Launching-the-Attack)
-4. [_Demo_](#Demo)
-5. [_Forensics_](#Forensics)
-6. [_Conclusion_](#Conclusion-and-Mitigation)
 
 # The Sandbox
 

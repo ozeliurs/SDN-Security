@@ -24,14 +24,14 @@ jobs:
           if compgen -G "papers/*.md" > /dev/null; then
             for mdfile in papers/*.md; do
               pdffile="papers/pdfs/$(basename "${mdfile%.md}.pdf")"
-              pandoc "$mdfile" --pdf-engine=pdflatex -s -o "$pdffile"
+              pandoc "$mdfile" --pdf-engine=pdflatex --toc --toc-depth=1 -s -o "$pdffile"
             done
           else
             echo "No Markdown files found in the papers directory."
           fi
 
       - name: Tar PDFs
-        run: tar -czf papers.tar.gz papers
+        run: tar -czf papers.tar.gz papers/pdfs
 
       - name: Upload PDFs
         uses: actions/upload-artifact@v2
