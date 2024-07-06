@@ -185,6 +185,7 @@ sudo python3 main.py
 ```
 
 This script automates everything from creating the network topology to launching the DDoS attack and reporting the results[^1].
+
 [^1]: cf _Fig.2_, see animated version: [_https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/.assets/demo.gif_](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/.assets/demo.gif)
 
 _Note: The demo requires Mininet to be installed on the system._
@@ -204,6 +205,7 @@ We can observe the spike in network traffic during the attack.
 This network traffic is all directed towards the target server, as seen in the Sent/Received network traffic graph (cf _Fig.6_).
 
 The traffic is distributed enough to saturate the 200 Mbps link to the server but not enough to saturate the 1 Gbps links between the switches[^2].
+
 [^2]: cf _Fig.7_, see animated version: [_https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/.assets/bwm-ng/bwm_ng.gif_](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/.assets/bwm-ng/bwm_ng.gif))
 
 ## Packet Capture
@@ -239,6 +241,7 @@ This work is in part inspired by `MiniAttack` by _Geraked_. The original reposit
 ![Network Topology](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/.assets/sandbox-network-diagram.jpg)
 
 ![Demo[^3]](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/.assets/demo.gif)
+
 [^3]: See animated version: [_https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/.assets/demo.gif_](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/.assets/demo.gif)
 
 ![H2 Network Traffic](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/.assets/bwm-ng/s1-eth2.png)
@@ -250,6 +253,7 @@ This work is in part inspired by `MiniAttack` by _Geraked_. The original reposit
 ![Sent/Received Network Traffic](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/.assets/bwm-ng/attack_network_traffic.png)
 
 ![Global Network Traffic[^4]](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/.assets/bwm-ng/bwm_ng.gif)
+
 [^4]: See animated version: [_https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/.assets/bwm-ng/bwm_ng.gif_](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/.assets/bwm-ng/bwm_ng.gif) 
 
 ![C2 Request](https://raw.githubusercontent.com/ozeliurs/SDN-Security/main/papers/.project-files/ddos-attack/.assets/tcpdump/c2_request.png)
