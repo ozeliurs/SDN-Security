@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - 'papers/**'
+  workflow_dispatch:
 
 permissions:
   contents: write
