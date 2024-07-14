@@ -73,7 +73,7 @@ The virus can be launched on the compromised hosts using the following command:
 python3 simple-virus.py &
 ```
 
-## Control and Command Server
+## Command and Control Server
 
 As seen before, the virus connects to a command and control server to receive commands.
 
