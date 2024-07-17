@@ -220,6 +220,12 @@ By analyzing the packets on `s2-eth1`, we can see that the client host is unable
 
 Finally, we can deduce how the attack unfolded (cf _Fig.10_).
 
+# Mitigation
+
+In this case we attacked the network by flooding the target server's bandwidth with SYN packets. To mitigate such an attack, the simplest solution is to allocate more bandwidth to the target server. However, this is not always feasible or cost-effective.
+
+A more effective solution is to implement rate limiting on the network to prevent the server from being overwhelmed by excessive traffic. This can be achieved using tools like `iptables` to limit the number of incoming connections per second.
+
 # Conclusion
 
 In this paper, we have delved into the lifecycle of a Distributed Denial of Service (DDoS) attack, from the initial infection of hosts to the execution of a service-denial event. By creating a controlled sandbox environment using Mininet, we demonstrated how DDoS attacks can be emulated, monitored, and analyzed.
